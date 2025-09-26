@@ -1,10 +1,27 @@
+
 import os
+import time
 from kafka import KafkaProducer
 from kafka.admin import KafkaAdminClient, NewTopic
 from flask import Flask, request, jsonify
 
 KAFKA_BROKER = os.environ.get('KAFKA_BROKER', 'kafka:9092')
 TOPIC = os.environ.get('KAFKA_TOPIC', 'python-topic')
+
+# Wait for Kafka broker to be available
+def wait_for_kafka(max_retries=10, delay=5):
+    for attempt in range(max_retries):
+        try:
+            admin = KafkaAdminClient(bootstrap_servers=KAFKA_BROKER)
+            admin.close()
+            return True
+        except Exception:
+            print(f"Kafka broker not available, retrying in {delay}s...")
+            time.sleep(delay)
+    print("Kafka broker not available after retries, exiting.")
+    exit(1)
+
+wait_for_kafka()
 
 # Create topic if not exists
 def create_topic():
