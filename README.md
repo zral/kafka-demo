@@ -38,9 +38,10 @@ Kafka UI will be available at http://localhost:8081.
 ### Node.js Consumer Service (http://localhost:3004)
 - `GET /messages` - Get all received messages
 
+
 ### Python Producer Service (http://localhost:5002)
 - `POST /send` - Send a message
-  - Body: `{"message": "your message"}`
+  - Body: `{ "message": "your message" }`
 
 ### Python Consumer Service (http://localhost:5001)
 - `GET /messages` - Get all received messages
