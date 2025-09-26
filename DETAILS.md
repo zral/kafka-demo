@@ -24,25 +24,59 @@ Kafka er som en postkasse eller en kø hvor meldinger kan legges inn og hentes u
 
 I vår løsning oppretter tjenestene automatisk en topic kalt "test-topic" hvis den ikke finnes.
 
+
 ## Komponenter i Løsningen
 
-### 1. Producer-Service (Produsent-Tjeneste)
-- **Hva det gjør**: Dette er en liten webserver laget i Node.js som venter på forespørsler om å sende meldinger.
+### 1. Node.js Producer-Service (Produsent-Tjeneste)
+- **Hva det gjør**: Node.js webserver som venter på forespørsler om å sende meldinger.
 - **Hvordan det fungerer**:
-  - Den lytter på port 3000.
-  - Når noen sender en POST-forespørsel til `/send` med en melding, legger den meldingen på Kafka topic "test-topic".
-  - Ved oppstart kobler den seg til Kafka og oppretter topicet hvis nødvendig.
-- **Teknologi**: Node.js med Express (for webserver) og KafkaJS (for å snakke med Kafka).
+  - Lytter på port 3000.
+  - POST til `/send` med en melding legger den på Kafka topic "test-topic".
+  - Oppretter topicet ved oppstart hvis nødvendig.
+- **Teknologi**: Node.js med Express og KafkaJS.
 
-### 2. Consumer-Service (Konsument-Tjeneste)
-- **Hva det gjør**: En annen Node.js webserver som henter meldinger fra Kafka og lagrer dem i minnet.
+### 2. Node.js Consumer-Service (Konsument-Tjeneste)
+- **Hva det gjør**: Node.js webserver som henter meldinger fra Kafka og lagrer dem i minnet.
 - **Hvordan det fungerer**:
-  - Den lytter på port 3001.
-  - Den kobler seg til Kafka som en konsument og abonnerer på "test-topic".
-  - Når en melding kommer, legger den den til i en liste.
-  - Via GET-forespørsel til `/messages` kan du hente listen over alle mottatte meldinger.
-  - Også den oppretter topicet ved oppstart hvis nødvendig.
-- **Teknologi**: Samme som produsenten, men fokuserer på å motta i stedet for å sende.
+  - Lytter på port 3001.
+  - Konsumerer fra "test-topic" og lagrer meldinger.
+  - GET til `/messages` gir listen over mottatte meldinger.
+- **Teknologi**: Node.js med Express og KafkaJS.
+
+### 3. Python Producer-Service
+- **Hva det gjør**: Python Flask-app som sender meldinger til Kafka.
+- **Hvordan det fungerer**:
+  - Lytter på port 5002.
+  - POST til `/send` med en melding legger den på Kafka topic "python-topic".
+  - Oppretter topicet ved oppstart hvis nødvendig.
+- **Teknologi**: Python med Flask og kafka-python.
+
+### 4. Python Consumer-Service
+- **Hva det gjør**: Python Flask-app som mottar meldinger fra Kafka og lagrer dem i minnet.
+- **Hvordan det fungerer**:
+  - Lytter på port 5001.
+  - Konsumerer fra "python-topic" og lagrer meldinger.
+  - GET til `/messages` gir listen over mottatte meldinger.
+- **Teknologi**: Python med Flask og kafka-python.
+
+### 5. Web-UI (Nettside)
+- **Hva det gjør**: En React-basert nettside hvor du kan skrive inn meldinger og se dem komme inn, for både Node.js og Python tjenester.
+- **Hvordan det fungerer**:
+  - Input-felt og send-knapp for Node.js og Python produserende tjenester.
+  - Viser mottatte meldinger fra begge konsumenter i separate lister.
+  - API-kall til `/api/node-producer/send`, `/api/node-consumer/messages`, `/api/producer/send`, `/api/consumer/messages`.
+  - Kjører på port 3005, servert av Nginx.
+- **Teknologi**: React og Nginx.
+
+### 6. Kafka UI
+- **Hva det gjør**: Webgrensesnitt for å overvåke Kafka topics og meldinger.
+- **Hvordan det fungerer**:
+  - Tilgjengelig på http://localhost:8081.
+- **Teknologi**: provectuslabs/kafka-ui Docker image.
+
+### 7. Kafka og Docker Compose
+- **Kafka**: Håndterer meldingene.
+- **Docker Compose**: Starter alle tjenester og kobler dem sammen.
 
 ### 3. Web-UI (Nettside)
 - **Hva det gjør**: En enkel nettside hvor du kan skrive inn meldinger og se dem komme inn.
@@ -62,28 +96,33 @@ I vår løsning oppretter tjenestene automatisk en topic kalt "test-topic" hvis 
 - Dette er en fil (`docker-compose.yml`) som definerer hvordan alle delene skal kjøres sammen.
 - Hver komponent kjører i sin egen "container" (som en virtuell maskin), så de ikke forstyrrer hverandre.
 - Starter Zookeeper først, så Kafka, så de to tjenestene, og til slutt web-UI.
-- Porter: 3000 (produsent), 3001 (konsument), 3002 (web-UI).
+- Porter: 3000 (Node.js produsent), 3001 (Node.js konsument), 5002 (Python produsent), 5001 (Python konsument), 3005 (web-UI), 8081 (Kafka UI).
 
-## Teknologier Brukt
-- **Node.js**: Et miljø for å kjøre JavaScript på serveren.
-- **Express**: Et bibliotek for å lage webservere i Node.js.
-- **KafkaJS**: Et bibliotek for å bruke Kafka i JavaScript.
-- **React**: For å lage den interaktive nettsiden.
-- **Docker**: For å pakke hver del i containere.
-- **Docker Compose**: For å kjøre flere containere sammen.
-- **Nginx**: En webserver som serverer React-appen og videresender API-kall.
+- **Node.js**: Backend for Node.js tjenester.
+- **Express**: Webserver for Node.js.
+- **KafkaJS**: Kafka-klient for Node.js.
+- **Python**: Backend for Python tjenester.
+- **Flask**: Webserver for Python.
+- **kafka-python**: Kafka-klient for Python.
+- **React**: Frontend.
+- **Docker**: Containerisering.
+- **Docker Compose**: Orkestrering.
+- **Nginx**: Webserver og proxy.
+- **Kafka UI**: Webgrensesnitt for Kafka.
 
 ## Hvordan Kjøre Løsningen
 1. Sørg for at Docker og Docker Compose er installert på maskinen din.
-2. Åpne en terminal og naviger til mappen hvor løsningen ligger (f.eks. `c:\Users\lsoraas\Dev\kafka`).
-3. Kjør kommandoen: `docker-compose up --build`.
-4. Vent til alt er startet (du ser logger i terminalen).
-5. Åpne nettleseren og gå til http://localhost:3002.
-6. Skriv inn en melding, trykk "Send", og se den dukke opp i listen.
+2. Åpne en terminal og naviger til mappen hvor løsningen ligger (f.eks. `/Users/larssoraas/Dev/2025/kafka/kafka-demo`).
+3. Kjør kommandoen: `docker-compose up --build -d`.
+4. Vent til alt er startet (du kan sjekke med `docker ps`).
+5. Åpne nettleseren og gå til:
+  - Web UI: http://localhost:3005
+  - Kafka UI: http://localhost:8081
+6. Skriv inn en melding i Node.js eller Python seksjonen, trykk "Send", og se den dukke opp i riktig liste.
 
-## Hvorfor Denne Arkitekturen?
 - **Mikrotjenester**: Hver del er uavhengig, så du kan endre en uten å påvirke de andre.
 - **Kafka**: Gir pålitelig meldingsoverføring, selv om noen deler er nede.
 - **Docker**: Gjør det enkelt å kjøre på forskjellige maskiner uten å installere alt manuelt.
+- **Støtte for flere språk**: Node.js og Python tjenester kan sammenlignes og brukes parallelt.
 
 Hvis du har spørsmål eller vil endre noe, er det bare å si ifra!
