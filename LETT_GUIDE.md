@@ -1,7 +1,7 @@
 
 # Veiledning for Kafka-demo
 
-Denne veiledningen gir deg en oversikt over hvordan prosjektet fungerer, og hvordan du kan komme i gang. Den er tilpasset frontend-utviklere og andre som ønsker en enkel introduksjon til Kafka og meldingsbasert arkitektur.
+Denne veiledningen gir deg en oversikt over hvordan prosjektet fungerer, og hvordan du kan komme i gang. Den er tilpasset alle som ønsker en enkel introduksjon til Kafka og meldingsbasert arkitektur.
 
 ---
 
@@ -20,7 +20,6 @@ Apache Kafka er en plattform for distribuerte meldinger. Den fungerer som et mel
 ---
 
 
-## Prosjektstruktur
 
 - **producer-service/**: Produsentapplikasjon som sender meldinger til Kafka (JavaScript).
 - **consumer-service/**: Konsumentapplikasjon som mottar meldinger fra Kafka (JavaScript).
@@ -28,6 +27,7 @@ Apache Kafka er en plattform for distribuerte meldinger. Den fungerer som et mel
 - **python-consumer/**: Konsumentapplikasjon i Python.
 - **web-ui/**: Webapplikasjon for visualisering av meldinger.
 - **docker-compose.yml**: Konfigurasjonsfil for å starte alle tjenester samlet.
+- **Kafka Web UI**: Et webgrensesnitt for å overvåke Kafka, topics og meldinger i sanntid.
 
 ---
 
@@ -35,14 +35,13 @@ Apache Kafka er en plattform for distribuerte meldinger. Den fungerer som et mel
 ## Hvordan fungerer det?
 
 1. **Produsenter** genererer og sender meldinger til Kafka.
-2. **Kafka** mottar og lagrer meldingene i såkalte "topics".
+2. **Kafka** mottar og lagrer meldingene i såkalte "topics" (eller "tema" på Norsk).
 3. **Konsumenter** abonnerer på topics og henter meldingene for videre behandling.
 4. **Web-UI** presenterer meldingene i et brukervennlig grensesnitt.
 
 ---
 
-
-## Kom i gang
+## Hvordan komme i gang
 
 1. Sørg for at Docker er installert på din maskin.
 2. Åpne en terminal og naviger til prosjektmappen.
@@ -51,9 +50,11 @@ Apache Kafka er en plattform for distribuerte meldinger. Den fungerer som et mel
    docker-compose up
    ```
 4. Vent til alle tjenester er oppe og kjører.
-5. Åpne nettleseren og gå til adressen som er oppgitt i instruksjonene (vanligvis http://localhost:3000).
+5. Åpne webapplikasjonen i nettleseren på http://localhost:3000 (eller http://localhost:3005 hvis du bruker React-UI).
+6. **Åpne Kafka Web UI** i nettleseren på http://localhost:8081 for å få innsikt i topics og meldinger.
 
 ---
+
 
 
 ## Hva kan du gjøre?
@@ -61,6 +62,7 @@ Apache Kafka er en plattform for distribuerte meldinger. Den fungerer som et mel
 - Send meldinger fra en av produsentapplikasjonene.
 - Observer hvordan konsumentene mottar og behandler meldingene.
 - Visualiser meldingene i webapplikasjonen.
+- **Bruk Kafka Web UI for å se hvilke topics som finnes, hvilke meldinger som sendes og leses, og få full innsikt i meldingsflyten i systemet.**
 
 ---
 
@@ -74,10 +76,12 @@ Apache Kafka er en plattform for distribuerte meldinger. Den fungerer som et mel
 ---
 
 
+
 ## Tips
 
 - Hvis noe ikke fungerer, stopp alle tjenester med `Ctrl+C` i terminalen og start på nytt med `docker-compose up`.
 - Sjekk loggene i terminalen for feilmeldinger.
+- **Kafka Web UI** er et nyttig verktøy for å feilsøke og forstå hvordan meldinger flyter mellom tjenester. Her kan du se innholdet i topics, meldingshistorikk og status på Kafka-systemet.
 
 ---
 
