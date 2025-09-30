@@ -116,8 +116,8 @@ function App() {
             setJavaMessages([]);
             return;
           }
-          const data = await res.text();
-          setJavaMessages(data ? data.split("\n") : []);
+          const data = await res.json();
+          setJavaMessages(Array.isArray(data) ? data : []);
           setJavaError('');
         } catch (e) {
           setJavaError('Java consumer not available');

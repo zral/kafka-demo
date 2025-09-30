@@ -1,4 +1,5 @@
 package com.example;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -10,8 +11,7 @@ public class KafkaConsumerController {
     private KafkaConsumerService consumerService;
 
     @GetMapping("/poll")
-    public String pollMessage() {
-        String msg = consumerService.pollMessage();
-        return msg != null ? msg : "No messages available";
+    public List<String> pollMessage() {
+        return consumerService.pollMessage();
     }
 }

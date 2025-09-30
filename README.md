@@ -1,4 +1,3 @@
-
 # Kafka Microservices Demo
 
 A solution with Node.js, Python, C#, and Java microservices communicating via Kafka, a React web UI for sending and receiving messages, and Kafka UI for monitoring.
@@ -16,6 +15,20 @@ A solution with Node.js, Python, C#, and Java microservices communicating via Ka
 - `web-ui/`: React app that allows the user to send messages and display received messages for Node.js, Python, C#, and Java services.
 - `docker-compose.yml`: Docker Compose file for deploying everything.
 - `Kafka UI`: Web interface for monitoring Kafka topics and messages (http://localhost:8081).
+
+## Docker Image Sizes
+
+| Service                   | Image Tag | Size   |
+|--------------------------|-----------|--------|
+| java-consumer            | latest    | 734MB  |
+| java-producer            | latest    | 734MB  |
+| csharp-consumer          | local     | 454MB  |
+| csharp-producer          | local     | 454MB  |
+| python-consumer          | latest    | 243MB  |
+| python-producer          | latest    | 243MB  |
+| consumer-service (Node)  | latest    | 1.29GB |
+| producer-service (Node)  | latest    | 1.29GB |
+| web-ui                   | latest    | 80.9MB |
 
 ## To run
 
