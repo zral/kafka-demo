@@ -1,6 +1,6 @@
 # Kafka Microservices Demo
 
-A solution with Node.js, Python, C#, and Java microservices communicating via Kafka, a React web UI for sending and receiving messages, and Kafka UI for monitoring.
+A solution with microservices in Node.js, Python, C#, Java (Spring Boot), and Go communicating via Kafka, containerized with Docker Compose, proxied by Nginx, a React web UI for sending and receiving messages, and Kafka UI for monitoring.
 
 ## Structure
 
