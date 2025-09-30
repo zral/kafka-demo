@@ -1,4 +1,23 @@
 services:
+  go-producer:
+    build: ./go-producer
+    ports:
+      - "7002:7002"
+    environment:
+      - KAFKA_BROKER=kafka:9092
+      - KAFKA_TOPIC=go-topic
+    depends_on:
+      - kafka
+
+  go-consumer:
+    build: ./go-consumer
+    ports:
+      - "7001:7001"
+    environment:
+      - KAFKA_BROKER=kafka:9092
+      - KAFKA_TOPIC=go-topic
+    depends_on:
+      - kafka
   kafka:
     image: bitnami/kafka:latest
     environment:

@@ -127,6 +127,38 @@ function App() {
       return () => clearInterval(interval);
     }, []);
 
+  // Go services
+  const [goMessage, setGoMessage] = useState('');
+  const [goMessages, setGoMessages] = useState([]);
+  const [goError, setGoError] = useState('');
+  const sendGoMessage = async () => {
+    await fetch('/api/go-producer/send', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message: goMessage })
+    });
+    setGoMessage('');
+  };
+  useEffect(() => {
+    const interval = setInterval(async () => {
+      try {
+        const res = await fetch('/api/go-consumer/messages');
+        if (!res.ok) {
+          setGoError('Go consumer not available');
+          setGoMessages([]);
+          return;
+        }
+        const data = await res.json();
+        setGoMessages(Array.isArray(data) ? data : []);
+        setGoError('');
+      } catch (e) {
+        setGoError('Go consumer not available');
+        setGoMessages([]);
+      }
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <div style={{ display: 'flex', gap: '40px' }}>
       <div>
@@ -163,6 +195,15 @@ function App() {
           {javaError && <div style={{color:'red'}}>{javaError}</div>}
           <ul>
             {javaMessages.map((msg, i) => <li key={i}>{msg}</li>)}
+          </ul>
+        </div>
+        <div>
+          <h2>Go Producer/Consumer</h2>
+          <input value={goMessage} onChange={e => setGoMessage(e.target.value)} />
+          <button onClick={sendGoMessage}>Send</button>
+          {goError && <div style={{color:'red'}}>{goError}</div>}
+          <ul>
+            {goMessages.map((msg, i) => <li key={i}>{msg}</li>)}
           </ul>
         </div>
     </div>

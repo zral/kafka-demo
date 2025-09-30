@@ -12,7 +12,9 @@ A solution with Node.js, Python, C#, and Java microservices communicating via Ka
 - `csharp-consumer/`: C# service that receives messages from Kafka topic and stores them.
 - `java-producer/`: Java Spring Boot service that sends messages to Kafka topic.
 - `java-consumer/`: Java Spring Boot service that receives messages from Kafka topic and stores them.
-- `web-ui/`: React app that allows the user to send messages and display received messages for Node.js, Python, C#, and Java services.
+- `go-producer/`: Go service that sends messages to Kafka topic. Built with a minimal scratch image (14.7MB).
+- `go-consumer/`: Go service that receives messages from Kafka topic and stores them. Built with a minimal scratch image (14.9MB).
+- `web-ui/`: React app that allows the user to send messages and display received messages for all supported services.
 - `docker-compose.yml`: Docker Compose file for deploying everything.
 - `Kafka UI`: Web interface for monitoring Kafka topics and messages (http://localhost:8081).
 
@@ -20,6 +22,8 @@ A solution with Node.js, Python, C#, and Java microservices communicating via Ka
 
 | Service                   | Image Tag | Size   |
 |--------------------------|-----------|--------|
+| go-consumer              | latest    | 14.9MB |
+| go-producer              | latest    | 14.7MB |
 | java-consumer            | latest    | 734MB  |
 | java-producer            | latest    | 734MB  |
 | csharp-consumer          | local     | 454MB  |
@@ -42,11 +46,18 @@ Kafka UI will be available at http://localhost:8081.
 ## Functionality
 
 - All microservices create Kafka topic 'test-topic' (or language-specific topic) if it doesn't exist on startup.
-- Node.js, Python, C#, and Java producer services expose POST /send for sending messages.
-- Node.js, Python, C#, and Java consumer services expose GET /messages (or /poll for Java) for retrieving received messages.
+- Node.js, Python, C#, Java, and Go producer services expose POST /send for sending messages.
+- Node.js, Python, C#, Java, and Go consumer services expose GET /messages (or /poll for Java) for retrieving received messages.
 - Web UI allows sending and viewing messages for all supported services, with separate UI sections.
 
 ## API Endpoints
+
+### Go Producer Service (http://localhost:7002)
+- `POST /send` - Send a message
+  - Body: `{ "message": "your message" }`
+
+### Go Consumer Service (http://localhost:7001)
+- `GET /messages` - Get all received messages
 
 ### Node.js Producer Service (http://localhost:3000)
 - `POST /send` - Send a message
