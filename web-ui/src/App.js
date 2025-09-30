@@ -65,6 +65,38 @@ function App() {
     return () => clearInterval(interval);
   }, []);
 
+  // C# services
+  const [csMessage, setCsMessage] = useState('');
+  const [csMessages, setCsMessages] = useState([]);
+  const [csError, setCsError] = useState('');
+  const sendCsMessage = async () => {
+    await fetch('/api/csharp-producer/send', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message: csMessage })
+    });
+    setCsMessage('');
+  };
+  useEffect(() => {
+    const interval = setInterval(async () => {
+      try {
+        const res = await fetch('/api/csharp-consumer/messages');
+        if (!res.ok) {
+          setCsError('C# consumer not available');
+          setCsMessages([]);
+          return;
+        }
+        const data = await res.json();
+        setCsMessages(data);
+        setCsError('');
+      } catch (e) {
+        setCsError('C# consumer not available');
+        setCsMessages([]);
+      }
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <div style={{ display: 'flex', gap: '40px' }}>
       <div>
@@ -83,6 +115,15 @@ function App() {
         {pyError && <div style={{color:'red'}}>{pyError}</div>}
         <ul>
           {pyMessages.map((msg, i) => <li key={i}>{msg}</li>)}
+        </ul>
+      </div>
+      <div>
+        <h2>C# Producer/Consumer</h2>
+        <input value={csMessage} onChange={e => setCsMessage(e.target.value)} />
+        <button onClick={sendCsMessage}>Send</button>
+        {csError && <div style={{color:'red'}}>{csError}</div>}
+        <ul>
+          {csMessages.map((msg, i) => <li key={i}>{msg}</li>)}
         </ul>
       </div>
     </div>
