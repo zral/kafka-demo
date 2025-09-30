@@ -1,0 +1,3 @@
+#!/bin/sh
+# Dummy wrapper for Maven, for Docker build compatibility
+exec mvn "$@"

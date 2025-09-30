@@ -97,6 +97,36 @@ function App() {
     return () => clearInterval(interval);
   }, []);
 
+    // Java services
+    const [javaMessage, setJavaMessage] = useState('');
+    const [javaMessages, setJavaMessages] = useState([]);
+    const [javaError, setJavaError] = useState('');
+    const sendJavaMessage = async () => {
+      await fetch('/api/java-producer/send?message=' + encodeURIComponent(javaMessage), {
+        method: 'POST'
+      });
+      setJavaMessage('');
+    };
+    useEffect(() => {
+      const interval = setInterval(async () => {
+        try {
+          const res = await fetch('/api/java-consumer/poll');
+          if (!res.ok) {
+            setJavaError('Java consumer not available');
+            setJavaMessages([]);
+            return;
+          }
+          const data = await res.text();
+          setJavaMessages(data ? data.split("\n") : []);
+          setJavaError('');
+        } catch (e) {
+          setJavaError('Java consumer not available');
+          setJavaMessages([]);
+        }
+      }, 1000);
+      return () => clearInterval(interval);
+    }, []);
+
   return (
     <div style={{ display: 'flex', gap: '40px' }}>
       <div>
@@ -126,6 +156,15 @@ function App() {
           {csMessages.map((msg, i) => <li key={i}>{msg}</li>)}
         </ul>
       </div>
+        <div>
+          <h2>Java Producer/Consumer</h2>
+          <input value={javaMessage} onChange={e => setJavaMessage(e.target.value)} />
+          <button onClick={sendJavaMessage}>Send</button>
+          {javaError && <div style={{color:'red'}}>{javaError}</div>}
+          <ul>
+            {javaMessages.map((msg, i) => <li key={i}>{msg}</li>)}
+          </ul>
+        </div>
     </div>
   );
 }

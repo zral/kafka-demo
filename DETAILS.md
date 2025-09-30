@@ -74,9 +74,43 @@ I vår løsning oppretter tjenestene automatisk en topic kalt "test-topic" hvis 
   - Tilgjengelig på http://localhost:8081.
 - **Teknologi**: provectuslabs/kafka-ui Docker image.
 
-### 7. Kafka og Docker Compose
-- **Kafka**: Håndterer meldingene.
-- **Docker Compose**: Starter alle tjenester og kobler dem sammen.
+
+### 8. C# Producer-Service
+- **Hva det gjør**: C# webserver som sender meldinger til Kafka.
+- **Hvordan det fungerer**:
+  - Lytter på port 3002.
+  - POST til `/send` med en melding legger den på Kafka topic "test-topic".
+- **Teknologi**: C# med ASP.NET og Confluent.Kafka.
+
+### 9. C# Consumer-Service
+- **Hva det gjør**: C# webserver som mottar meldinger fra Kafka og lagrer dem i minnet.
+- **Hvordan det fungerer**:
+  - Lytter på port 3003.
+  - Konsumerer fra "test-topic" og lagrer meldinger.
+  - GET til `/messages` gir listen over mottatte meldinger.
+- **Teknologi**: C# med ASP.NET og Confluent.Kafka.
+
+### 10. Java Producer-Service
+- **Hva det gjør**: Java Spring Boot-app som sender meldinger til Kafka.
+- **Hvordan det fungerer**:
+  - Lytter på port 8082.
+  - POST til `/api/java-producer/send?message=din_melding` legger meldingen på Kafka topic "demo-topic".
+- **Teknologi**: Java med Spring Boot og spring-kafka.
+
+### 11. Java Consumer-Service
+- **Hva det gjør**: Java Spring Boot-app som mottar meldinger fra Kafka og lagrer dem i minnet.
+- **Hvordan det fungerer**:
+  - Lytter på port 8083.
+  - Konsumerer fra "demo-topic" og lagrer meldinger.
+  - GET til `/api/java-consumer/poll` gir neste mottatte melding.
+- **Teknologi**: Java med Spring Boot og spring-kafka.
+
+- **Støtte for flere språk**: Node.js, Python, C#, og Java tjenester kan sammenlignes og brukes parallelt.
+- **React**: Frontend.
+- **Docker**: Containerisering.
+- **Docker Compose**: Orkestrering.
+- **Nginx**: Webserver og proxy.
+- **Kafka UI**: Webgrensesnitt for Kafka.
 
 ### 3. Web-UI (Nettside)
 - **Hva det gjør**: En enkel nettside hvor du kan skrive inn meldinger og se dem komme inn.

@@ -21,11 +21,16 @@ Apache Kafka er en plattform for distribuerte meldinger. Den fungerer som et mel
 
 
 
+
 - **producer-service/**: Produsentapplikasjon som sender meldinger til Kafka (JavaScript).
 - **consumer-service/**: Konsumentapplikasjon som mottar meldinger fra Kafka (JavaScript).
 - **python-producer/**: Produsentapplikasjon i Python.
 - **python-consumer/**: Konsumentapplikasjon i Python.
-- **web-ui/**: Webapplikasjon for visualisering av meldinger.
+- **csharp-producer/**: Produsentapplikasjon i C#.
+- **csharp-consumer/**: Konsumentapplikasjon i C#.
+- **java-producer/**: Produsentapplikasjon i Java (Spring Boot).
+- **java-consumer/**: Konsumentapplikasjon i Java (Spring Boot).
+- **web-ui/**: Webapplikasjon for visualisering av meldinger fra alle språk.
 - **docker-compose.yml**: Konfigurasjonsfil for å starte alle tjenester samlet.
 - **Kafka Web UI**: Et webgrensesnitt for å overvåke Kafka, topics og meldinger i sanntid.
 
