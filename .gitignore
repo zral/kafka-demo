@@ -1,0 +1,16 @@
+# Ignore build artifacts for C# projects
+csharp-consumer/bin/
+csharp-consumer/obj/
+csharp-producer/bin/
+csharp-producer/obj/
+
+# Node.js
+node_modules/
+
+# Python
+__pycache__/
+*.pyc
+
+# Other
+.env
+.DS_Store
