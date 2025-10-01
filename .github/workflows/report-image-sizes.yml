@@ -1,0 +1,27 @@
+name: Report image sizes
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  report-sizes:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Make script executable
+        run: |
+          chmod +x ./scripts/report-image-sizes.sh || true
+
+      - name: Run image size script
+        run: |
+          mkdir -p artifacts
+          ./scripts/report-image-sizes.sh > artifacts/image-sizes.md || true
+
+      - name: Upload image sizes artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: image-sizes
+          path: artifacts/image-sizes.md

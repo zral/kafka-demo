@@ -33,6 +33,19 @@ A solution with microservices in Node.js, Python, C#, Java (Spring Boot), and Go
 | consumer-service (Node)  | latest    | 1.29GB |
 | producer-service (Node)  | latest    | 1.29GB |
 | web-ui                   | latest    | 80.9MB |
+| Service | Image Tag | Size |
+|---|---:|---:|
+| consumer-service | latest | 1.29GB |
+| csharp-consumer | local | 454MB |
+| csharp-producer | local | 454MB |
+| go-consumer | latest | 14.9MB |
+| go-producer | latest | 14.7MB |
+| java-consumer | latest | 734MB |
+| java-producer | latest | 734MB |
+| producer-service | latest | 1.29GB |
+| python-consumer | latest | 243MB |
+| python-producer | latest | 243MB |
+| web-ui | latest | 80.9MB |
 
 ## To run
 
